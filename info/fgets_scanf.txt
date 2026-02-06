@@ -1,0 +1,32 @@
+Both are used to get input from the user
+
+
+1)input limiting: scanf can limit, provided the size is added in format string, if not we will see buffer overflows
+choice: fgets     fgets can limit as well, infact it requires the max size as an argument. so no chance of overflow
+			even if input greater than max is given it will simply truncate the rest of the part and only take till max
+
+
+2)Multiple Fields: scanf(): we can enter multiple fields, structure the data, like specify chars between fields
+choice: scanf	   fgets(): cant. one string into the buffer. no other datatypes just strings.
+
+
+3)spaces in strings: scanf(): when using %s to read a string it stops as soon as it hits space. if more than one
+Better: fgets	     word is to be entered either call it more than once, or use so Regular Expression trick
+		     fgets(): no problem with spaces can read whole thing at once.
+scanf parameters:
+when taking a long string as an input you can do something like
+puts("data = ")
+while(scanf("%k[^\n]"))
+k will be the size of the array - 1 since one space will be reserved for \0
+[] means scanset 
+^ is used to indicate NOT
+\n newline char
+
+means: Read everything until you hit \n 
+
+Return values of scanf:
+based on the number of inputs successfully read it gives a return value
+while (scanf("%f, %f, %79[^\n]", latitude , longitude , info ) == 3
+if all 3 are read only then its 3 otherwise itll be the number of inputs succesfully read
+0 means none 1 means 1 and so on.
+(missing field, bad format, etc count as invalid input)

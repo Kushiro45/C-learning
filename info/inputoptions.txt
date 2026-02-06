@@ -1,0 +1,40 @@
+normally main is written without arguments as main()
+
+but if we need to use the user input from the command line we can do it via
+
+main(int argc, char *argv[])
+argc - argument counter, counts number of arguments including the name of program
+*argv[] - pointer to an argument array which stores pointers for all the arguments
+typed in command line. so its an pointer array. and the *argv[] points to the 
+first pointer of the array.
+This doesnt mean that the arguments typed arent writeable, they can be edited
+by array indexing. (stored in OS memory for process)
+However its not guaranteed to work (OS dependent), hence portable C code should avoid 
+direct modification (can cause overflows)
+for safe modification copy the argument strinf into a new array and modify that
+
+
+
+using getopt() function from the unistd.h header POSIX library
+allows us to implement options for a program to include flexibility
+
+eg: 
+getopt(argc, argv, "ae:")
+		    ^------valid options
+: means that particular flag will take argument
+optarg - option argument, will store the argument required by the flag
+	its a variable and not an array because getopt processes one option at a time
+so it can be updated at every loop
+then you need a switch case for what each option does.
+
+
+argc = argc - optind   #subtracting the options count from argc to get actual argument count to program
+                ^-------optind stores the next option that has to be processed
+			the index in argv of the next thing getopt() should process, so it gets added by one every loop.
+argv = argv + optind
+#similarly initially argv is pointing to ./program at the beginning after adding optind to it it points to the non-option argument.
+
+now normally if getopt is used by itself it becomes mandatory for other flags
+to be written after execution command
+------>  ./prog -flags arguments
+

@@ -1,0 +1,66 @@
+The idea of a pointer is to point to an address
+
+so say
+
+int x = 100 
+and say &x = 0x1000
+
+*p = x
+therefore p pointer variable will not only point to the address of x but also dereference
+its value, i.e. *p = 100
+
+in case of strings/ or rather an array C usually keeps a track of it using a pointer to 
+the starting character of the array.
+
+char x[] = [ 'a', 'b', 'c', 'd' ] or "abcd"
+char *t = x or rather &x[0] which will be an address 
+
+sizeof operator gives us the value of the parameter passed to it so itll return 4 or 8 
+bytes in case of a pointer, here 't' and for array itll be No. of chars + '\0' null char 
+here 'x'
+
+sizeof operator works with array size, the compiler finds out array size (take
+array x for example) it fills the value by counting the chars itself and sizeof 
+operator finds its value itself.
+
+apparently in C 
+&x == x what does that mean? that address of array is basically address of first element
+hence &x == &x[0] == x
+
+
+REMEMBER
+x[i] can be read as *(x + i)
+so passing array values like x[i] or i[x] is fine (where i is index and x is array name)
+it gets evaluated to the satement above, and since addition is commutative
+we get the right output
+
+
+
+but for a pointer
+&t != t
+since a pointer variable is a variable... so it has its own address. 
+eg address of t is say 0x200 but it stores 0x1000 the value of x 
+hence it means &t will be 0x200 and not 0x1000 hence not equal
+
+
+
+
+
+
+
+#accessing array elements
+
+it can be done via normal method of indexing
+x[i]
+
+or if you wanna use pointers:
+x[0] == *x , an array variable can be used as a pointer to the first element.
+
+and since address is just a number and sequential for array
+we can add the address with the index to access the value at that index.
+for example:
+x[2] == *(x + 2)     #also checkout the commutative behaviour mentioned above
+
+hence arrays begin at index 0:
+x[0] == *x == *(x+0) 
+

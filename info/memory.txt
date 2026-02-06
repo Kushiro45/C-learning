@@ -1,0 +1,55 @@
+C memory:
+
+if we write
+char *cards="JQK";
+
+when program loads into memory, all constants including string literals like JQK are saved into constant memory block which is read-only.
+
+then program creates stacks for local variables. (will also save 'cards' here)
+this cards variable is set to the address of a string literal JQK
+when we try the write operations it doesnt work because the literal is read-only
+check page 73 for more clarification in terms of diagram
+
+it gives random errors in different computers so one thing you can do is define it with
+const keyword.
+
+so instead of char *s = "" 
+do it const char *s = ""
+that way if someone performs write operation it gives a proper error.
+
+fix:
+
+if you cant change it make a writeable copy and work on that XD
+
+instead of creating a cards pointer we create an array via:
+char cards[] = "JQK"; 
+new array created in the 'stack'
+
+note that now two strings exist one in stack and one in constants, physically speaking.
+you can access the original literal only if you have a pointer to it.
+
+
+
+
+
+
+More about memory:
+
+it has the following levels:
+
+STACK: 
+local variable storage. starts at the top of memory and goes down.
+function call -> vars get pushed to stack -> then gget popped when done
+
+HEAP:
+Dynamic memory.
+
+GLOBALS:
+global variable, visible to all function, can be used and updated freely
+
+CONSTANTS:
+created when program first runs, read-only eg string literals.
+
+CODE:
+Normally placed in lowest memory address. read-only. assembled-code gets loaded here
+

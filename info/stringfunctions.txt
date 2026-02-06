@@ -1,0 +1,55 @@
+header -> string.h
+
+
+useful ones ->
+
+strchr() -> location of character inside a string
+strcmp() -> compare two strings
+strstr() -> find location of string inside another string -> strstr("bigstring", "targetstring")
+	 finds the substring and returns it address. if the substring doesnt exist returns value 0 (false)
+strcpy() -> copy one string to another
+strlen() -> find the length of a string
+strcat() -> concatenate two strings
+#strcspn() -> Count how many characters you can read from the start of string
+		before you hit any character from 'reject'
+	syntax: strcspn(const char *s, const char *reject);
+		reject is a set of forbidden characters so the function will stop
+	if it sees any char from the set and return the reject index(not pointer)
+
+
+
+size_t -> an integer used to store size of things.
+basically when sizeof operator is used to get size, in 32 bit / 64 bit systems
+theres a limit to maximum number of integer possible eg in 64 bit systems:
+maximum int value: 2,147,483,647 -> ~2GB
+maximum size possible -> 18,446,744,073,709,551,615
+so if you were to try to do 
+int i = sizeof(3Gb array)
+it would be overflow because int can handle a maximum of 2GB
+but it will work in the case of size_t
+size_t limit -> max_addressable_memory
+hence library code never uses int for sizes
+
+
+
+Array of Pointers.
+
+create an array like this
+char *names[] = {"Connor", "Markus", "Kara"};
+we dont need to define a 2D array to save strings here
+since the elements are pointers here, and these strings are string literals
+as a result this array stores pointers to the first char of each string.
+Access:
+
+names[1] -> address of the first character of the string 1 in this case address of M in Markus
+naturally you can dereference by *names[1] -> 'M'
+and hence names[0][1] -> o {names[i][j] == *(*(names + i) + j)}
+
+
+Difference between array of array and array of pointers will be:
+1) AoA is Contiguous, fixed row and writable
+2) AoP is scattered since we have pointers we dont need contiguous block of memory
+   and it can have variable length, but its read-only since we are pointing to
+  string literals, unlike in AoA where we create an array of the string literal which copies its contents into stack or writable memory.
+  strings can be made writable provided they are defined in arrays before AoP creation
+

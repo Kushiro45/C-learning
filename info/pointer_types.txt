@@ -1,0 +1,13 @@
+pointer types? 
+if they store address why bother?
+
+reason: pointer arithmetic.
+
+adding 1 to a char pointer, it will point to the very next address, .i.e. the next byte
+cuz char requires 1 byte of memory
+
+for int datatype usually 4 bytes is needed.
+adding 1 to an int pointer will add 4 bytes in compiled code.
+
+
+theres also FILE pointer for handling files.

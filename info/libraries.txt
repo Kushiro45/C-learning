@@ -1,0 +1,5 @@
+string.h ---> string functions like strcmp etc are stored here
+stdio.h ---> standard input, output. printing(printf), reading(scanf) and file handline functions are stored here
+stdlib.h ---> standard library. has functions for memory management, conversions and random numbers.
+unistd.h ---> unix standard library. not a standard C library.
+	access to POSIX libraries.
