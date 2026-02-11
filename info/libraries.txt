@@ -3,3 +3,5 @@ stdio.h ---> standard input, output. printing(printf), reading(scanf) and file h
 stdlib.h ---> standard library. has functions for memory management, conversions and random numbers.
 unistd.h ---> unix standard library. not a standard C library.
 	access to POSIX libraries.
+limits.h -> contains values for the integer types like int and char (max & min)
+float.h -> contains values for floats and doubles.

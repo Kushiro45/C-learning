@@ -50,3 +50,38 @@ need to typecast the other ints to float for proper result
 
 dividing a float by int will also work since compiler will automatically
 typecast the other int
+
+
+Formats to live by: 
+
+Integers
+
+%d → int
+
+%u → unsigned int
+
+%ld → long
+
+%lld → long long
+
+%x → hex
+
+Characters / Strings
+
+%c → char
+
+%s → string
+
+Floating point
+
+%f → normal float/double printing
+
+%e → scientific notation
+
+%g → “smart” (auto chooses between %f and %e)
+
+Sizes / pointers
+
+%zu → size_t (used with sizeof)
+
+%p → pointer address

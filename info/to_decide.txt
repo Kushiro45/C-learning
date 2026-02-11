@@ -1,0 +1,22 @@
+order of functions matter.
+Define a function or at the very least declare it before calling it in other function
+why?
+because say you call a function in main 
+but its deined after the main block
+then compiler assumes theres a function and then also assumes its return type 
+as int so we dont necessarily need to declare int functions unless sharing code.
+if its wrong and when it reaches the actual function it gives out error.
+
+so instead of fixing by moving functions
+just declare them before eg
+function_decl(type param);
+
+other option is to store that set of declarations into a header file.
+make your header file with .h extension. 
+and instead of angle brackets "< >" use quotes for local header files "" (indicate relative path)
+
+#include is a preprocessor instruction.
+
+#Ctrl + D sends EOF to scanf so the program will continue with the rest, useful in looping progs
+
+
