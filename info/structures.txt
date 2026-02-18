@@ -1,0 +1,62 @@
+the default datatypes in C are not good enough for higher tier data
+hence we can roll our own datatypes using structures
+
+struct data type has 
+1) fixed length
+2) the different fields inside it are referred by 'names'
+
+definition: 
+
+struct name {
+	int var;
+	:
+	char var 2;	
+}
+
+usage: 
+
+'struct name' is now the name of the new datatype we defined so using it will be like
+
+struct name <varname> = {values, "values"}; ----> in same order as in definition
+
+and ofcourse this variable snappy can be passed to function as argument
+in function parameter one must write struct <name> <random_varname>
+
+while it may look like an array one cannot access the struct fields using indexing
+like say we define a struct fish snappy
+snappy[0] will throw an error as snappy is neither array nor pointer
+
+only means of access is via field name using dot operator
+i.e. so snappy.name or snappy.age, etc
+
+NOTE: an array variable be it string or a normal array is basically a pointer to itself
+remember how it gets replaced with address of a[0] at compile time
+in struct however the struct variable is the name for struct itself
+
+Structs in memory: 
+struct fish fish1 = {"Snappy", "Pirahna", 69, 4}
+and then say you assign a new struct variable with the same variable then
+struct fish fish2 = fish1;
+in this case Snappy and Pirahna are string literals so the name and species 
+fields in fish2 will also point to the same strings as well
+obviously a new memory space will be allocated for this struct var.
+
+Struct nesting:
+more complexity, allows us to describe complex things
+
+struct preferences{
+	
+}
+
+
+struct fish{
+	fields
+	struct preferences care;
+}
+
+assignment:
+struct fish snappy = {"Snppy", 69, 4, {"MEAT", 7.5}}
+					^---care.field
+accessing value: 
+snappy.care.food = MEAT
+

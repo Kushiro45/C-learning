@@ -36,7 +36,8 @@ and even if the rest of the thing is untouched.
 because it calls underlying commands from the operating system.
 
 syntax of make file:
-
+target: dependencies (all files needed, inlcuding the .h files with a <soace in between)
+<TAB>gcc command here 
 
 
 check autoconf if makefile still seems manual
