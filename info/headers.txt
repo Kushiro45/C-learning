@@ -1,0 +1,70 @@
+order of functions matter.
+Define a function or at the very least declare it before calling it in other function
+why?
+because say you call a function in main 
+but its deined after the main block
+then compiler assumes theres a function and then also assumes its return type 
+as int so we dont necessarily need to declare int functions unless sharing code.
+if its wrong and when it reaches the actual function it gives out error.
+
+so instead of fixing by moving functions
+just declare them before eg
+function_decl(type param);
+
+other option is to store that set of declarations into a header file.
+make your header file with .h extension. 
+and instead of angle brackets "< >" use quotes for local header files "" (indicate relative path)
+
+#include is a preprocessor instruction.
+
+#Ctrl + D sends EOF to scanf so the program will continue with the rest, useful in looping progs
+
+--------------------------
+
+CODE SHARING:
+code sharing allows us to reuse same functions accross multiple files
+hence helping by saving space and time to edit them in case of need and also documentation
+
+steps:
+-> create a separate C file for the shared function
+-> create a header file preferably the same name as the program file with .h extension
+-> inside the header file declare the function you want to share eg. 
+	returntype fun_name(parameters); 
+-> inside the function file make an inclusion for the header file
+	so add #include "header.h" (Note using quotes because file is local)
+-> now function is portable, you just need to include the header file in the 
+   programs that actually need it
+
+then at the linking stage the program will be able to connect the function call
+in main with the included function
+compilation: gcc prog.c function.c -o binary
+you need both source files for the code to compile
+
+
+small programs allow us to create bigger programs
+and it makes it easier by working with modules (smaller multiple files)
+C compilers -> really efficient, modify source and link hundreds of files together 
+even optimise the code. without blowing memory and they do it fast
+
+problem is changing and compiling these big number of files into source code
+compilation time (&) no. of files
+the idea is, if you are changing only some source files, it doesnt make sense 
+to recompile each and every one of them 
+If source file hasnt changed then the object code of the file will also remain same
+so one only needs to create the object code of the modified files
+and then link them all together(still need to use linker) creating a new version of the program
+
+so how to save these object codes?
+---> gcc -c *.c
+-c will create object files but wont link them together into executable
+object files have .o extension
+
+then if you wanna link them together
+gcc *.o -o launch
+
+if done right the compile time can be reduced by 95%
+
+the problem is that partial compiles are faster but harder to track of.
+so to automate that process use the make tool
+
+check maketool.txt for more info 
