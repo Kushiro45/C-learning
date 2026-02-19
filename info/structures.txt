@@ -60,3 +60,19 @@ struct fish snappy = {"Snppy", 69, 4, {"MEAT", 7.5}}
 accessing value: 
 snappy.care.food = MEAT
 
+
+now defining and using a struct is tedious since one needs to write struct name
+again and again.
+this can be simplifies using "typedef"
+
+
+								|------YOUR CHOICE TO WRITE ANYTHING OR NOT CAN LEAVE IT BLANK
+struct cell_phone{				typedef struct __ {
+	int cell_no;                --------->		FIELDS
+	const char *wallpaper;			} aliasname (eg. phone) ---> assigning alias without name is called anonymous struct
+}
+
+calling:
+struct cell_phone p = {}			phone p = {}
+
+
