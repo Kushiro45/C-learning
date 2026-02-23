@@ -1,0 +1,25 @@
+needed if same type of thing needs different types of data.
+eg: quantity can be measured in number, weight, or volume its all quantity unless specified
+defining 3 variable fields in struct wastes memory hence union will be used
+
+---> lets you reuse memory space
+out of short and float which will be used to define the 3 quantity values
+float is 'largest' in comparison (4 bytes, check datatypes.txt) so union will define a 4 byte space
+and that space will be used based on what field of quantity is chosen.
+
+syntax: 
+
+typedef union {
+	short count;
+	float weight;
+	float volume;
+} quantity;
+
+usage: 
+
+ C89 stlyle for first field
+
+
+-----------------------------------------------------------------------------
+
+

@@ -58,8 +58,8 @@ assignment:
 struct fish snappy = {"Snppy", 69, 4, {"MEAT", 7.5}}
 					^---care.field
 accessing value: 
-snappy.care.food = MEAT
-
+snappy.care.food will print MEAT
+similarly you can update values using the assignment operators 
 
 now defining and using a struct is tedious since one needs to write struct name
 again and again.
@@ -74,5 +74,54 @@ struct cell_phone{				typedef struct __ {
 
 calling:
 struct cell_phone p = {}			phone p = {}
+
+
+when you pass a struct to a function and modify its values, they do get modified
+as one can see when they get printed.
+however thats only limited inside the function print it outside and its back to old value
+
+basically you define a function you define parameters and when you call a function
+and pass it arguments
+so inside it becomes parameter = argument
+eg ->
+
+void function(turtle t) --> used typedef for struct turtle to just be turtle
+{
+	t.age = t.age + 1
+	#manipulation of field values
+}
+
+function(myrtle);
+
+now this tranlsates as:
+turtle t = myrtle this means that a new struct t is made as a local copy of myrtle
+so when operations are performed they are performed on t instead of myrtle
+hence myrtle remains the same
+
+solution: pointer to the struct
+
+so the original function becomes:
+							|---datatype of ptr
+void fun(turtle *t) ---> the parameter now expects a turtle pointer 
+{
+	(*t).age = (*t).age + 1 ---> * because we need to dereference and change the value
+}
+
+fun(&myrtle)
+
+
+-------------------------------------------------------------------------------------------------------------------
+difference between (*t).age & *t.age
+
+(*t).age or t->age-> if t is a pointer to a turtle struct then age is the age of turtle
+*t.age --> evaluates to *(t.age) which gives error 
+#refer precedence order ->
+()        // function call
+[]        // array subscript
+->        // struct pointer member
+.         // struct member
+expr++    // postfix increment
+expr--    // postfix decrement
+
 
 
