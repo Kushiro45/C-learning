@@ -17,9 +17,45 @@ typedef union {
 
 usage: 
 
- C89 stlyle for first field
+C89 stlyle for first field
+quantity q = {4}; ---> count wil be 4 --> note that even if you pass a float value like 3.5 it will simply truncate the decimal part
+then for other values one can use either:
 
+Designated initialisers #can be used for first value as well-> 
+C99 style ->
+quantity q = {.weight=1.5}; using the dot notation one can set values for individual fields
+#can be used for structures as well
+
+OR
+
+Set the value with normal dot notation (best option in a sense)
+quantity q;
+q.volume = 3.7;
+
+side note: 
+doing margarita m;	WRONG (need to be on same line otherwise m is just an array and will throw error)
+      m = {2, 1, 0};  
 
 -----------------------------------------------------------------------------
+unions can be used with structs
 
+typedef struct{
+	const char *name;
+	const char *country;
+	quantity amount; ---> quantity is a union entity
+} fruit_order;
+
+fruit_order apples = {"apples", "England", .amount.weight=4.2};
+
+as shown above mixing positional and designated initialisers is allowed in C99 and above
+but one must not violate the declaration order as in the struct.
+____________________________________________________________________
+
+
+caveat: 
+
+since union uses the same space for the field one may not know the datatype that was stored
+and may read it as a wrong datatye leading to garbage values
+
+'enum' is used to avoid this
 
