@@ -56,6 +56,26 @@ caveat:
 
 since union uses the same space for the field one may not know the datatype that was stored
 and may read it as a wrong datatye leading to garbage values
+________________________________________________________________________________
 
 'enum' is used to avoid this
+enum helps creates a list of symbols which are basically allowed
+it stands for enumerate and like the name all it does is gives symbols to integers
+
+syntax: 
+typedef enum colors {
+	RED,-----> note that comma is a separator and not semicolon
+	GREEN, ----> using CAPS because constants/macros and enum are normally used like that, no compulsion
+	BLUE
+} colors
+colors f = PUCE; ----> will throw compilation error 
+
+when inspected closely RED GREEN BLUE are basically integers
+so think of it as RED = 0, GREEN = 1 and so on.
+so the following:     can be read as:
+enum colors f = RED	int f = 0;
+as a result after compilation one may not know when reversing if enum was used or not
+enum only is used to provide readability and avoid storing unwanted values
+
+
 

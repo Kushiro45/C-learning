@@ -1,0 +1,29 @@
+a struct may contain a lot of yes/no or true/false values
+these require just 1 or 0 for representation
+however int and short provide too big a space (2-4 bytes i.e. 16 to 32 bits) whereas we only need one bit
+
+hence we have 'bitfields'
+
+C doesnt support binary literals (take up space hex more efficient)
+int x = 101010; wrong
+one can however use hexadecimal literals
+syntax: 
+
+int x = 0x15 ---> numbers starting with 0x are considered hex
+converting to binary from here is easy convert each digit into a 4 bit binary
+
+usage:
+bitfields allow us to specify how many bits an individual field will store
+
+typedef struct{
+	unsigned int low_pass_vcf:1;  #this means each field will use only 1 bit storage
+	unsigned int filter_coupler:1;
+	... ^------- need to use unsigned int
+}synth;
+
+NOTE: 
+it is recommended to write multiple bitfields together becausea comuter can store them in a single byte
+if its single 8-bit fields so to speak.
+but if a single bit field is found, a comppiler might have to pad it to the size of a word
+
+
