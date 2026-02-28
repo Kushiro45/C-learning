@@ -1,0 +1,3 @@
+In C99 and C11 it is allowed for us to declare any variable in the middle of the code
+however in ANSI C, you need to declare variables at the top of a function.
+

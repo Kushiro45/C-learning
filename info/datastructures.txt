@@ -1,0 +1,99 @@
+array: inflexible but fast
+if you want to insert a value in between somewhere, not easy, fixed size
+need to shift all the contents to insert one value
+
+linkedlist: flexible but slow
+accessing data in linked list is sequential as a result accessing final data at the end of a very long list would require one to traverse the entire list 
+here array would be better since it allows direct access
+
+
+alternative: linked lists
+|value|address_to_next_node|
+
+creation and usage:
+need recursive structure ---> contains a link(ptr) to another struct of same type
+
+eg.
+
+typedef struct island{   ----> necessary to give struct a name when using typede for recursive structs
+	char *name;
+	char *opens;
+	char *closes;
+	struct island *next; ---> pointer type will obviously be the same as island
+}island;
+
+note that we have to use pointer and we cant use struct is because at compiletime
+sizeof(island) should be a finite value and recursing full structs will make it undefined
+
+one can simply create nodes and no need for writing down address
+
+island amity = {"Amity", "9:00", "17:00", NULL};
+					    ^
+island shutter = {"Shutter", ...., NULL}
+linking them: 
+
+amity.next = &shutter
+DONE (in a linked list the last node has no address)
+
+inserting values is also the same just use the dot operator
+
+--------------------------------------------------------------------------------------------
+
+Dynamic storage ---> heap
+for extra storage at runtime.
+heap is virtual memory so one can theoretically give more memory than available physical RAM.
+
+(refer memory.txt) for more information.
+
+stack is volatile and information gets deleted as soon as the function is over
+heap storage is available longer term. #also the downside
+
+done using malloc() ---> specify the memory needed
+returns an address to the start of space.
+
+
+memory leaks: keep on acumulating memory without freeing the memory no longer need
+and oviously heap has a fixed amount of storage available 
+while the program will free up all the memory itself on exit its better to do it yourself
+
+after use the memory is freed with free()
+______________________________________________________________________________________________
+
+malloc:
+
+syntax: malloc(sizeof(dataype/struct/union/anything))
+malloc takes one argument, which is a number in bytes so if one is unsure of size they can use sizeof operator
+
+since it returns an address one needs a pointer variable to store its contents
+NOTE: malloc returns a general purpose pointer, i.e. void *
+a general purpose pointer can point to any datatype since only raw memory is returned it has no type
+one can then choose its type by:
+
+island *p = malloc(sizeof(island));
+
+a void pointer cannot be easily dereferenced since compiler doesnt know its type
+casting is needed 
+eg void *p = malloc(4);
+*p = 10 ---> error, direct dereferencing not allowed
+
+*(int *)p = 10
+this will be read as: Write the integer value 10 into the 4 bytes starting at address p.
+
+and to free the space just free(p);
+
+______________________________________________________________________________________________
+if you are using just one array and pointing the name ptr of all the strcuts to that same name
+then all the island names get modified, we need a way to keep them all separate and copied.
+
+one could do that by calling malloc function to create a heap and then manually copying each char from name string
+to the heap.
+theres a function for that in string.h 
+
+'strdup()' - string duplicate
+
+usage:
+char *s = "Str to be copied"
+
+char *copy = strdup(s);
+since it creates a storage on heap one must release it with free() function later
+
