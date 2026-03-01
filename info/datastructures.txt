@@ -97,3 +97,7 @@ char *s = "Str to be copied"
 char *copy = strdup(s);
 since it creates a storage on heap one must release it with free() function later
 
+freeing stuff requires it to be done in order, if there are two entities created from malloc
+in this case say the island struct and the name of the island are both allocated with malloc but the name can be only accessed via the island so one needs to free island first and then the name otherwise the pointer to name is lost and this will cause memory leak.
+
+
