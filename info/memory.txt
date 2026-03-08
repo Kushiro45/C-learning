@@ -42,7 +42,7 @@ local variable storage. starts at the top of memory and goes down.
 function call -> vars get pushed to stack -> then gget popped when done
 
 HEAP:
-Dynamic memory.
+Dynamic memory. allocated at runtime using malloc() and freed using free(). no garbage collection, and hence the name heap because it isnt organised and is basically a heap of data.
 
 GLOBALS:
 global variable, visible to all function, can be used and updated freely

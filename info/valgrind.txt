@@ -1,0 +1,16 @@
+tool for linux operating system.
+
+monitors the data allocated on the heap.
+works by creating its own fake version of malloc(). when your program wants to allocate
+some heap memory, it will intercept your calls to malloc() and free() and then run
+its own versions of those functions.
+after program ends 
+it will report back on the data that was left on heap
+
+for valgrind one needs to make sure the executable contains 'debug information'
+debug info: extra data that gets packed into the executable when its compiled 
+stuff like line number in the source file the code was compiled from
+
+how to do it: 
+compile with '-g'
+ 
