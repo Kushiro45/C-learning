@@ -1,0 +1,5 @@
+a function that takes variable number of parameters is called a variadic function.
+C standard library contains a set of macros that help in creating new 
+variadic functions.
+
+
