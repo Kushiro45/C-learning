@@ -24,7 +24,7 @@ node* create(char *question){
 	n->yes = NULL;
 	return n;
 }
-// next up is the function that creates the actual nodes in the heap memory and returns the void ptr which then gets interpreted as node pointer due to declaration. since question is being taken from an array in the stac we need to duplicate it with strdup so that a copy of it will exist inside the heap and the node will use that, then since we dont know the answer to the question is yes or no we just keep it NULL and finally we return n i.e. the address. 
+// next up is the function that creates the actual nodes in the heap memory and returns the ptr since question is being taken from an array in the stack we need to duplicate it with strdup so that a copy of it will exist inside the heap and the node will use that, then since we dont know the answer to the question is yes or no we just keep it NULL and finally we return n i.e. the address. 
 //NOTE: we have to free the heap allocation of the question field first before node or the way to access it will be lost
 
 
@@ -48,7 +48,7 @@ int main(){
 	start_node->yes = create("Vinny the Spoon"); // similarly for yes, basically if no moustache then someone and if yes then someone else
 
 	node *current;  // declare a node pointer called current. since we havent initialised it, it contains random address
-		do {
+	do {
 		current = start_node;  // a do while loop so it will run atleast once before checking the condition. now current is pointing to the same address as start_node
 		while (1) { // keep running infinitely
 			if (yes_no(current->question)){    //from the selected node(currently start_node, ask the question by passing it to the yesno fun, record the answer and if answer is yes, move inside the if block, next check if the value of start_node's yes ptr field is not NULL, if true current will point to current->yes which means current will point to start_node->yes, which is the address to the node which contains vinny the spoon

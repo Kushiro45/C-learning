@@ -1,0 +1,69 @@
+idea is to send function as a parameter to a function.
+
+every function name is a pointer to the function.
+function names are also pointer variables
+when we do help_me(int no)
+we also create a help_me pointer containing address of the function
+
+however theres no 'function' datatype like int
+so the question becomes how to declare a function pointer which we can then pass as a parameter to another function
+
+
+function *f ----|X| aint gonna work
+
+
+reason functions are of many types - return type or list of parameters, etc define the type of function
+
+
+
+creating function pointers:
+
+int (*fun_ptr_name)(int);
+|---> the first int: return type, basically tells us that return type is int, lie normal functions definition;
+----> *fun_ptr_name: its a pointer
+----> the second int: parameter type, it tells us that its gonna take one int as a parameter
+
+so one can say:
+
+*fun_ptr_name is a pointer to a function that takes an int and returns an int.
+currently that pointer is empty or has garbage address, we need to assign it proper address
+
+fun_ptr_name = random_function; --> stores address of function to ptr, if you remember function names are pointers
+OR
+fun_ptr_name = &random_function (the same, & can be dropped)
+
+now calling the function through the created pointer:
+
+fun_ptr_name(4);
+equivanlent to ---> random_function(4); 
+
+
+eg.2
+
+char** (*names_fn)(char*, int);
+
+return type: char** -> returns a pointer to pointer to char
+mostly used for array of strings
+
+*names_fn is a pointer we declared.
+
+char*, int are parameters to the function.
+
+
+
+SORTING using function pointers:
+
+C standard library has a sort function that accepts a pointer to a comparator
+function, which is used to determine if a piece of data is same, less or  greater
+than another piece of data: qsort()
+
+qsort(void *array, size_t length, size_t item_size, int (*compar)(const void *, const void *));
+
+parameters: pointer to an array, a var storing length with size_t datatype so technically can store very big ones
+item_size is size of each element. and finally a pointer to an int function which accepts two void pointers that can point to anything
+
+qsort will switch values in wrong order and comparator will tell it which is the wrong order
+
+val1 > val2 = +num
+val1 < val2 = -num
+val1 = val2 = 0
