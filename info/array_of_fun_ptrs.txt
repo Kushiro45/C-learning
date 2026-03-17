@@ -1,0 +1,13 @@
+create an array of fun ptr if you have different functions for different case
+how to save?
+
+
+let each function in an array be a void function
+
+so array becomes
+
+void (*replies[])(response) = {dump, second_chance, marriage} ---> function names
+return type (pointer variable)(parameter type) 
+here parameter is type response which is a struct we have assumed to defined
+
+basically the returntype and parameters for all functions must be the same for them to be stored in the same array
