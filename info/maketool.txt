@@ -36,8 +36,14 @@ and even if the rest of the thing is untouched.
 because it calls underlying commands from the operating system.
 
 syntax of make file:
-target: dependencies (all files needed, inlcuding the .h files with a <soace in between)
+target: dependencies (all files needed, inlcuding the .h files with a <space in between)
 <TAB>gcc command here 
+
+and then to finally run makefile
+just type make
+
+it must be noted that dependencies only tell the make to recompile a target if any one of the dependencies change.
+and since make isnt a compiler one needs to tell the make the location of files using paths, if the source/header/or any file is not in the same place as the makefile
 
 
 check autoconf if makefile still seems manual

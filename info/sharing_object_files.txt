@@ -1,0 +1,51 @@
+1) Using full pathname:
+
+gcc -I/header_files test_code.c /my_object_files/help.o /my_object_files/checksum.o -o test_code
+
+good for 1 or 2 files bad if many files exist
+
+2) Creating an archive of object files: 
+An archive is a bunch of object files wrapped up into a single file.
+
+ends in .a extension (like .zip or tar file)
+
+Viewing contents of archive:
+nm command lists the names that are stored inside the archive
+nm *.a (* is the archive name)
+
+creating an archive:
+command: ar
+
+ar -rcs libhfsecurity.a encrypt.o checksum.o
+flags: 
+-r file will be updated if already exists
+-c create without feedback
+-s create an index at the start of the .a file
+
+necessary to use 'lib' at the start of your archive standard way of naming archives as static libraries
+in static linking the archive cannot change once its done, hence the name
+
+one can then put the archive in a standard directory
+usually /usr/local/lib because its set aside for our own local custom libraries
+
+then compiling the code using that library:
+using the -l flag
+gcc test_code.c -lhfsecurity -o testcode
+first source then library usin -l which stands for lib, so if you created a library called libsomething in gcc you write -lsomething
+
+if library is in a different location -L flag
+-L/pathtofolder -l(libname)
+
+A lilbit about the 'nm' command
+
+running an nm on archive lists its contents, the names of .o files in it
+it will also list the names inside the object files
+eg: 
+T _yywrap : here T means text, which means this is a function whose name is yywrap.
+
+object files inside an archive are not linked like an executable, they exist as distinct files like in a zip file
+however one cannot put any file in it as ar will check filetype
+
+to extract a single object file from the archive:
+ar -x lib(nameofarch).a (nameofobjectfile).o
+

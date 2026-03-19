@@ -40,6 +40,10 @@ in main with the included function
 compilation: gcc prog.c function.c -o binary
 you need both source files for the code to compile
 
+SHARING your custom .h HEADER FILES:
+1) store them in standard directory -> /usr/local/include
+2) or just use full path name in include section "path to header"
+3) mentioning it to the compiler. gcc -I/header_files test_code.c. this will make it search in the directory name in -I option and then also check in standard places
 
 small programs allow us to create bigger programs
 and it makes it easier by working with modules (smaller multiple files)
