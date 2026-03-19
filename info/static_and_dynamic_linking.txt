@@ -1,0 +1,109 @@
+1) Using full pathname:
+
+gcc -I/header_files test_code.c /my_object_files/help.o /my_object_files/checksum.o -o test_code
+
+good for 1 or 2 files bad if many files exist
+
+2) Creating an archive of object files: 
+An archive is a bunch of object files wrapped up into a single file.
+
+ends in .a extension (like .zip or tar file)
+
+Viewing contents of archive:
+nm command lists the names that are stored inside the archive
+nm *.a (* is the archive name)
+
+creating an archive:
+command: ar
+
+ar -rcs libhfsecurity.a encrypt.o checksum.o
+flags: 
+-r file will be updated if already exists
+-c create without feedback
+-s create an index at the start of the .a file
+
+necessary to use 'lib' at the start of your archive standard way of naming archives as static libraries
+in static linking the archive cannot change once its done, hence the name
+
+one can then put the archive in a standard directory
+usually /usr/local/lib because its set aside for our own local custom libraries
+
+then compiling the code using that library:
+using the -l flag
+gcc test_code.c -lhfsecurity -o testcode
+first source then library usin -l which stands for lib, so if you created a library called libsomething in gcc you write -lsomething
+
+if library is in a different location -L flag
+-L/pathtofolder -l(libname)
+
+A lilbit about the 'nm' command
+
+running an nm on archive lists its contents, the names of .o files in it
+it will also list the names inside the object files
+eg: 
+T _yywrap : here T means text, which means this is a function whose name is yywrap.
+
+object files inside an archive are not linked like an executable, they exist as distinct files like in a zip file
+however one cannot put any file in it as ar will check filetype
+
+to extract a single object file from the archive:
+ar -x lib(nameofarch).a (nameofobjectfile).o
+
+static linking is fine if the program solves all the use cases and doesnt really need to be changed
+however usually thats not the case and one needs to often change the program object code lots of times and this is a problem with statically linked files as they are basically a one huge object file made by linking and theres no way to separate individual files after that
+one has to change and recompile it
+
+
+a better option is
+
+DYNAMIC LINKING:
+dynamic linking happens at runtime (obviously)
+
+instead of linking all the object code into a single file one has to find a wau of storing the object code in separate files and then dynamically linking them together only when the program runs
+
+the normal object .o and .a archive files dont have enough information in themto be linked at runtime. dynamic library files need the names of other files they need to link to.
+
+just like the static library we created using archive
+a dynamic library is also built from the same .o files however they are properly linked together in a dynamic library to form a single piece of code.
+
+dynamic library contains extra information OS needs for linking
+
+Recipe for a dynamic library:
+1) take a source file and convert it into a PIC object code
+	gcc -I/include -fPIC -c hfcal.c -o hfcal.o
+just like how we normally create an object file but with a slight twist
+-fPIC stands for Position Independent Code
+PIC: basically code doesnt mind where its loaded in memory.
+eg: imagine you had a dynamic library that expected to find the value of some piece of data 500 bytes away from where library is loaded. it wont work if OS decides to load it somewhere else, PIC solves this.
+
+lib loaded at 0x900 but data was at 0x1700 inside code, but library was expected to be be loaded at 0x1200
+but due to PIC what happens is it uses relative location. so instead of
+0x1700 it becomes 500 bytes offset to 0x900 which is 0x1400
+
+in all sense PIC means 'relativity in code'
+
+some OSes need to build libraries from PIC to decide at runtime where to load it in memory, this option is not needed to be specified on most systems
+where is it not needed? Windows. since it uses memory mapping when loading DLswhich means all code is effectively position independent.
+the fPIC flag gives warning as its not needed ( you can ignore it or remove it)
+
+
+Dynamic library can be called different things depending on platform:
+Windows: Dynamic link libraries (.dll - MinGW) or (dll.a - Cygwin) 
+Linux/Unix: shared object files (.so)
+Mac: dynamic libraries (.dylib)
+
+
+2) Creating the library:
+gcc -shared objectfile.o -o lib(name).(extension)
+
+#not necessary to  write lib in MinGW windows
+
+-shared: tells gcc to convert a .o object file to a dynamic library
+NOTE: the library will store its name inside it, so you cant simply rename it, you will have to recompile it.
+
+3) Use it.
+after compiling the DL one can use it just like a static library
+gcc -I./include -c elliptical.c -o elliptical.o
+gcc elliptical.o -L ./libs -lhfcal -o elliptical
+
+
