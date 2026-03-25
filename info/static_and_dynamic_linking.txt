@@ -106,4 +106,8 @@ after compiling the DL one can use it just like a static library
 gcc -I./include -c elliptical.c -o elliptical.o
 gcc elliptical.o -L ./libs -lhfcal -o elliptical
 
+Note that if your library is not in the standard location you need to move it there
+or create an env var to your lib
+using: export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:(path_to_your_lib)
 
+You only need -L, -I flags only if the header or libraries arent in the

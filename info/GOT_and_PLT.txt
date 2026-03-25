@@ -1,0 +1,35 @@
+GOT stands for Global Offset Table:
+the standard library libc is usually dynamically linked to the program because it doesnt make sense for everyprogram to have its own copy instead of sharing it.
+after compilation the program doesnt know where in memory the stdlib functions will be since thats decided a runtime. so one cannot hardcode the address of the functions.
+GOT and PLT are the lookup systems that help find out the real address
+
+Global offset table contains function name and its address in memory. It lives in RAM and also can be updated(written) at runtime.
+
+dynamic linker(OS component that loads the program) figures out the function address it writes it to this table. Which the program can now reference
+
+PLT: Procedure Linkage Table 
+Acts as a middle man 
+why not simply use GOT table? 
+simple in PIC code the code doesnt know its load address, and PLT helps using offset from the current instruction
+
+PLT looks up the address in the GOT, jumps to that address
+if not found, it calls the resolver to find it 
+
+Lazy Binding: 
+When the program starts the GOT is empty. filling at the start would make it slow
+so it only looks up the real addresses when the function actually gets called
+
+call printf
+  → PLT[printf]: checks GOT → GOT is blank!
+  → PLT[printf]: calls the resolver (dynamic linker)
+  → resolver: finds printf in libc.so, gets its address
+  → resolver: writes the real address into GOT[printf]
+  → resolver: jumps to printf
+  
+Second time you call printf:
+  → PLT[printf]: checks GOT → GOT has the real address now
+  → jumps directly — no resolver needed
+
+Security Concers of GOT:
+If someone can write any value anywhere in memory (Arbitary write Primitive)
+they can replace GOT entry address with anything they want
