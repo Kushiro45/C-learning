@@ -7,10 +7,11 @@ Global offset table contains function name and its address in memory. It lives i
 
 dynamic linker(OS component that loads the program) figures out the function address it writes it to this table. Which the program can now reference
 
-PLT: Procedure Linkage Table 
+PLT: Procedure Linkage Table (Trampoline)
 Acts as a middle man 
 why not simply use GOT table? 
 simple in PIC code the code doesnt know its load address, and PLT helps using offset from the current instruction
+think of GOT as just a table whose job is to only provide information about the location of functions. And PLT has rhe instructions necessary to deal with those locations
 
 PLT looks up the address in the GOT, jumps to that address
 if not found, it calls the resolver to find it 

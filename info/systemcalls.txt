@@ -1,0 +1,6 @@
+system calls are just function inside the OS kernel.
+
+1) system()
+expects a string (acts as shell)
+system("gedit") --> will launch gedit on linux
+
