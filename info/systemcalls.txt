@@ -15,6 +15,8 @@ printf("now you see me on your terminal");
 execve(path, args, envp);
 printf("now you dont");
 basically execve transforms the program and hence one will effectively see theoutput only till execve
+hence preferred idea would be to implement it towards the end.
+or use fork() systemcall
 
 now there are two main implementations of execve -> list functions and array functions:
 
@@ -66,4 +68,11 @@ ESRCH=3 -- No such process
 so errno will return one of the values which one can cross reference using the above values or use:
 strerror is in string.h
 puts(strerror(errno)); strerror converts the int to its corresponding message
+
+
+fork() - clone your process
+exactly the same program, on the same line number. same variables & values, only difference is the PID
+NOTE: when creating a fork, we generally store the pid via
+pid_t pid; pid_t is used because different OSes use different var types like short or int so it detects whats used and uses that.
+
 

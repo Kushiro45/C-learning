@@ -17,7 +17,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-import urllib
+import urllib.request
 import os
 import re
 import sys
@@ -31,8 +31,8 @@ def usage():
 
 try:
     opts, args = getopt.getopt(sys.argv[1:], "uh", ["urls", "help"])
-except getopt.GetoptError, err:
-    print str(err)
+except (getopt.GetoptError, err):
+    print(str(err))
     usage()
     sys.exit(2)
 
@@ -47,19 +47,23 @@ for o, a in opts:
         assert False, "unhandled option"
 
 searcher = re.compile(args[0], re.IGNORECASE)
-for url in string.split(os.environ['RSS_FEED']):
-    feed = urllib.urlopen(url)
+for url in os.environ['RSS_FEED'].split():
+    req = urllib.request.Request(
+        url,
+        headers={
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+            }
+    )
+    feed = urllib.request.urlopen(req)
     try:
         dom = minidom.parse(feed)
         forecasts = []
         for node in dom.getElementsByTagName('title'):
-            txt = node.firstChild.wholeText
-            if searcher.search(txt):
-                txt = unicodedata.normalize('NFKD', txt).encode('ascii', 'ignore')
-                print(txt)
-                if include_urls:
-                    p = node.parentNode
-                    link = p.getElementsByTagName('link')[0].firstChild.wholeText
-                    print("\t%s" % link)
+            if node.firstChild:
+                txt = node.firstChild.wholeText
+                print("Debug", txt)
+       
+             
+             
     except:
         sys.exit(1)
