@@ -4,3 +4,66 @@ system calls are just function inside the OS kernel.
 expects a string (acts as shell)
 system("gedit") --> will launch gedit on linux
 
+2) exec*()
+many functions which essentially do the same thing with different syntax but works around the kernel syscall execve() (also have a libc execve)
+
+execve(): executes a program with provided args.
+it replaces the program in execution which called exec
+
+so
+printf("now you see me on your terminal");
+execve(path, args, envp);
+printf("now you dont");
+basically execve transforms the program and hence one will effectively see theoutput only till execve
+
+now there are two main implementations of execve -> list functions and array functions:
+
+list functions: 
+the list functions accept the command line arguments as a list of parameters
+execl()/execle()/execle()
+
+execl() -> full path of program needed, no PATH, uses current env
+execlp() -> no need for full path, since it uses $PATH for searches, uses current env
+execle() -> same as execl just lets you define custom env
+
+NOTE: the first argument is always the name of the program.
+
+
+execl("/full/path/to/prog", "/full/path/again", "list", "of", "arguments", NULL) /*NULL to define when do the arguments end*/
+execlp("prog", "args", NULL)
+execle(".....same as execl", NULL, env_vars) can create your own array of env variables and pass that array to execle()
+eg: char *env_vars[] = {"PATH=/bin" , "USER=hacker", NULL}
+NOTE: we need NULL here because execve execve functions exepct a char *argv[] and its treated as a NULL terminated list
+
+array functions:
+execv(), execvp(), execve()
+
+basically you pass your arguments as an array
+
+execv("/abs/path/", my_args);
+execvp("prog", my_args);
+
+
+l -> list v -> array=vector of args
+p -> path searching
+e -> env variables
+
+3) getenv(): C programs can read environment variables with the getenv() sys call. 
+
+
+The GOLDEN RULES of Failure in syscalls:
+1) Tidy up as much as you can
+2) set the errno variable to an error value
+3) Return -1
+
+helps in identifying if a syscall failed, why?
+the errno is a global variable defined in errno.h
+
+EPERM=1 -- Operation not permitted
+ENOENT=2 -- No such file or directory
+ESRCH=3 -- No such process
+
+so errno will return one of the values which one can cross reference using the above values or use:
+strerror is in string.h
+puts(strerror(errno)); strerror converts the int to its corresponding message
+
