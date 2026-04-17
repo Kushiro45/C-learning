@@ -1,0 +1,107 @@
+printf() function prints output to stdout.
+unless specified stdout and stderr are both displayed on the display and stdin is normally keyboard
+
+fprintf() helps print to a data stream
+you can choose whether you want the data to be sent to stdout or stderr
+
+eg: fprintf(stdout, "Hello");
+NOTE: printf() actually calls fprintf()
+
+similarly to read from the stdin one can use fscanf() just like scanf() but like we saw above
+
+to redirect streams to files instead of default display:
+
+< redirect stdin to read a file
+> redirects stdout
+2> redirects stderr
+
+pipeline: syntax
+parentheses are necessary.
+(process1 | process2) < >
+if several processes are connected with pipes then 
+< will send a file's content to the first process in the pipeline
+> will capture the Standard output from the last process in pipeline
+
+
+if we want to write output to more than one file.
+basically we can write to two files at most
+one from standard output and one from standard error.
+given by the OS
+
+
+new data stream can be created using fopen()
+each datastream is represented by a pointer to a file
+
+#No of data streams per process depends on OS, one can have 256 usually. (hardware dependent)
+
+FILE *in_file = fopen("input.txt", "r")
+^                      ^----filename ^---- r: read
+|------Will create a datastream to read from a file
+
+modes:
+"w" - write
+"r" - read
+"a" - append (to the end of the file)
+
+open a file named input.txt in read mode and return the pointer that can be
+used to read it
+'FILE' is basically a datatype like int used to declare pointertype
+since fopen will return a fileobject we need an appropriate pointer to handle its value.
+
+
+similary to create a datastream to write to a file
+FILE *in_file = fopen("input.txt", "w")
+
+after creating a datastream one needs to know its descriptor. use fileno() function and pass the pointer to the fun.
+eg: int descriptot = fileno(in_file);
+will return the value 3 if no other streams other than standard ones are present
+(descriptor numbers are given using a sequential order of numbers)
+
+NOTE: if fileno fails it doesnt return -1
+
+
+the f in fopen, fscanf and fprintf stands for file
+
+so by using 'fopen' create a datastream
+using 'fprintf' print to that datastream
+and 'fscanf' to read from it
+
+eg: fprintf(out_file, "text");
+after that we have to close the datastream using 'fclose'
+eg: fclose(out_file)
+NOTE: itll close automatically once the program ends but better to end it yourself
+
+
+
+NOTE: better to have checks if theres a problem with opening file
+
+FILE *in;
+if(!(in = fopen("dont_exist", "r"))){
+	fprint(stderr, "Cant open the file.\n");
+	return 1;
+}
+
+
+Every process will contain a descriptor table: 
+Each data stream is represented by a file descriptor (doesnt necessarily represent files), which, under the surface, is just a number, gets stored in descriptor table
+
+eg: 
+0 - Keyboard
+1 - Screen 
+using redirection 1>file.txt we can change standard input to the file instead of the screen.
+so redirection basically replaces data streams.
+one can also redirect streams:
+./myprog 2>&1 (redirect stderr to stdin)
+
+NOTE: one can have as many datastreams as they'd like (limited only to hardware)
+
+Processes can redirect themselves rewiring the descriptor table.
+
+dup2(): duplicates streams ->
+basically edit a stream with already present streams
+eg
+3 -> Database connection
+4 -> guitar.txt
+doing dup2(4,3) means copy 4 to 3, so 3  -> guitar.txt
+now both streams File pointer point to the same file.
+

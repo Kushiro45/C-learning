@@ -70,9 +70,12 @@ strerror is in string.h
 puts(strerror(errno)); strerror converts the int to its corresponding message
 
 
-fork() - clone your process
+fork() - clone your process returns PID of the new process
 exactly the same program, on the same line number. same variables & values, only difference is the PID
 NOTE: when creating a fork, we generally store the pid via
-pid_t pid; pid_t is used because different OSes use different var types like short or int so it detects whats used and uses that.
+pid_t datatype; pid_t is used because different OSes use different var types like short or int so it detects whats used and uses that.
 
+forking is done in OSes using copy-on-write, same memory is used rather than making a copy, only the changed memory gets copied to the new PID
+NOTE: windows doesnt support the fork() systemcall, because implementing it efficiently is hard to do on it however Cygwin does allow fork, which is still slower than fork() on other platforms
+better use CreateProcess() (enchanced version of system())
 
