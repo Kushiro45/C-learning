@@ -105,3 +105,81 @@ eg
 doing dup2(4,3) means copy 4 to 3, so 3  -> guitar.txt
 now both streams File pointer point to the same file.
 
+use exit() function for exiting, (error handling) 
+instead of emploting an if statement in main just to type return 1
+one can simply create a new error function
+
+void error(char *msg)
+{
+	fprintf(stderr, "%s: %s\n", msg, strerror(errno));
+	exit(1); /*will terminate the program with status 1 immediately*/
+}
+
+located in stdlib.h header.
+then for error checking
+pid_t pid = fork();
+if (pid == -1){
+	error("Cant fork process");
+}
+
+the problem with forking is that the child process runs independently of the parent which means the parent has to simply wait for the child process to complete
+this is implemented with the waitpid() function. located in the <sys/wait.h> header file
+
+waitpid():
+wont return a value until the child process dies.
+basically we can add the code in program that it will not terminate until all the child processes have terminated
+used for process synchronization.
+
+function signature: 
+pid_t waitpid(pid_t pid, int *status, int options);
+
+inside the pid field one can pass
+1) the pid of child process
+2) pid = 0: wait for any child in the same process group as the main program. as soon as one child process exits itll return.
+
+-> every process belongs to a process group (PGID), when a child is created from that process it inherits the Parent PGID.
+process groups are used to manage jobs by the shell
+3) pid == -1: wait for any child process at all. returns when any one child terminates
+4) pid < -1: specific process group, basically wait for any child whose PGID == abs(pid) so in positive.
+
+the status field contains:
+macros, these macros are defined in the wait.h header
+
+so what are macros:
+#define SQUARE(x) ((x)*(x))
+
+so SQUARE(3) is replaced with ((3)*(3))
+similarly there are predefined macros 
+WIFEXITED(status)
+
+status is not a simple integer its a bit-packed value
+what that means? 
+
+a normal int is 32 bits:
+so 4x8 bytes
+so instead of having multiple int variables to store different small values
+we use one 32 bit int 
+and store multiple values
+status = [exit_code | signal_info | flags]
+and then to access these we use macros 
+eg: WIFEXITED(status) will expand to something like status & 0x7F
+macros basically help extract the values
+
+Why bother?
+systemcalls are low-level and passing one integer is efficient   
+
+Options:
+many options exist:
+0 - Default: blocking wait
+WNOHANG - Non Blocking (returns immediately if no child exited)
+WUNTRACED - also report stopped children
+WCONTINUED - Report resumed children
+
+eg:
+int pid_status;
+
+if (waitpid(pid, &pid_status, 0) == -1){
+	error("Error waiting for child process");
+}
+
+
