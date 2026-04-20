@@ -182,4 +182,33 @@ if (waitpid(pid, &pid_status, 0) == -1){
 	error("Error waiting for child process");
 }
 
+in a nutshell the values get stored in the pid_status and then one can access them using the macros.
+
+pipe()
+creates a pipe between two processes, output of one is input of another
+it opens two data streams. one from stdin and one to stdout
+
+int fd[2];
+if(pipe(fd) == -1){
+	error("cant create the pipe");
+}
+
+so you pass an int array to it. which stores the descriptors.
+fd[1] is the descriptor that writes to the pipe
+fd[0] reads from the pipe
+
+child:
+close fd[0] and stdout point to same as fd[1]
+close(fd[0]);
+dup2(fd[1], 1);
+
+parent:
+dup2(fd[0], 0);
+close(fd[1]);
+
+pipes created in pipe() function are not files. usually memory
+it is possible to create pipes files (FIFO)
+used when two process want to talk to each other and are not parent and child. so as long as they know the pipe they can talk
+done using the mkfifo() systemcall
+
 

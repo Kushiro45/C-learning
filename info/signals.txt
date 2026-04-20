@@ -1,0 +1,4 @@
+programs are controlled with the signals to interrupt when necessary
+when interrupt is sent the process runs its interrupt handler and calls exit()
+
+
