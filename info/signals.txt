@@ -1,4 +1,30 @@
 programs are controlled with the signals to interrupt when necessary
 when interrupt is sent the process runs its interrupt handler and calls exit()
 
+so now how do we catch signals?
+using sigaction : sigaction is a struct which has pointer to a function
+sigactions tell which funcion to call when a signal is sent
+
+creating a sigaction:
+struct sigaction action;
+action.sa_handler = name_of_function;
+sigemptyset(&action.sa_mask); ---> sigemptyset does exactly what it sounds like, it emptys all the signal bits inside sa_mask to 0;
+sa_mask: is a bitfield which contains the signals that should be blocked while the handler is running.
+since we used sigempty set itll basically say "DONT BLOCK ANY EXTRA SIGNALS WHEN THE HANDLER RUNS"
+
+action.sa_flags = 0; ---> additional flags
+
+
+then you create a handler which takes int argument (will pass the signal to it) 
+
+so now we use the sigaction()
+sigaction(signal_no, &new_action, &old_action);
+new action will be the action we created from the struct
+and the old action is basically what we want it to revert to
+so like a default action after doing our new one
+or we can leave it NULL
+
+
+
+
 
