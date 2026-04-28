@@ -61,6 +61,11 @@ so something like an alarm clock, you set a timer, after the timer has passsed i
 by default when SIGALRM is received by the process, it stops the process. one can set a handler to do something else.
 alarms are great to repeat a task after a specific interval, or as timeouts
 
+setting an alarm for less than a second is more complicated. one needs to use a different function setitimer(). (for seconds or fraction of em) 
+
+each process only gets one timer since its managed by kernel, and too many timers make the kernel slow, hence the limit.
+if a timer is already set and you set it again the timer gets reset to that new timer og is lost.
+
 
 SIG_DFL ->
 used if one wants to restore the default signal handler. instead of the custom ones.
@@ -68,6 +73,8 @@ catch_signal(SIGTERM, SIG_DFL);
 
 SIG_IGN ->
 tells the process to completely ignore that signal.
+
+
 
 
 
