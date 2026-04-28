@@ -23,6 +23,14 @@ int catch_signal(int sig, void (*handler)(int)){
 }
 
 int main(){
-	if (catch_signal(SIGINT, diediedie
-
+	if (catch_signal(SIGINT, diediedie) == -1){
+		fprintf(stderr, "Can't map the handler");
+		exit(2);
+	}
+	/*sigaction() returns 0 when successful or -1 when unsuccessfull one can use errno to determine what went wrong */
+	char name[30];
+	printf("Enter your name: ");
+	fgets(name, 30, stdin);
+	printf("Hello %s\n", name);
+	return 0;
 }

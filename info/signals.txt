@@ -24,7 +24,50 @@ and the old action is basically what we want it to revert to
 so like a default action after doing our new one
 or we can leave it NULL
 
+NOTE: HIGHLY RECOMMENDED TO REFER THE PROGRAM /10/signal_handler.c
 
+signals:
+
+SIGINT - The process was interrupted
+SIGQUIT - Someone asked the process to stop and dump the memory in a core dump file
+SIGFPE - Floating-point error
+SIGTRAP - The debugger asks where the process is
+SIGSEV - the process tried to access illegal memory
+SIGWINCH - The terminal window changed size
+SIGTERM - someone just asked the kernel to kill the process
+SIGPIPE - The process wrote to a pipe that nothing's reading
+
+
+the kill command - 
+can be used to test whether your signal handler works.
+normally used to kill off processes but it can send signals to a process (SIGTERM by default)
+
+accepted flags: INT, SEGV, KILL, etc, the idea is to remove SIG from SIGINT
+one can always kill any process with -KILL flag
+and -STOP cant also be ignored (pause)
+
+A process can send a signal to itself 
+raise():
+basically helps the process send a signal to itself.
+can be used to create custom signal handler or testing.
+
+signal escalation: raise a more serious signal after receiving a signal for something minor
+
+
+
+SIGALRM:
+created by the process's interval timer.
+so something like an alarm clock, you set a timer, after the timer has passsed itll raise the signal. (itll happen in the background) so the process isnt blocked.
+by default when SIGALRM is received by the process, it stops the process. one can set a handler to do something else.
+alarms are great to repeat a task after a specific interval, or as timeouts
+
+
+SIG_DFL ->
+used if one wants to restore the default signal handler. instead of the custom ones.
+catch_signal(SIGTERM, SIG_DFL);
+
+SIG_IGN ->
+tells the process to completely ignore that signal.
 
 
 
