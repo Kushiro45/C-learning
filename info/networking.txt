@@ -1,0 +1,128 @@
+C programs use datastreams to read/write bytes. 
+similarly the datastream used to talk over network is called a socket
+
+#include <sys/socket.h> -> required header
+int listener_d = socket(PF_INET, SOCK_STREAM, 0);
+
+here listener_d is a socket descriptor(integer assigned by kernel) used to identify that socket.
+returns -1 on failure
+
+here PF_INET is protocol family ipv4 similar to AF_INET in Python
+SOCK_STREAM is basically teling us the connection type.
+0 is for protocol, 0 means use default, i.e. IPPROTO_TCP
+
+why give protocol field if we know stream sock is basically tcp? think of it as knowing swimming, one can swim in any form but the idea is to swim 
+similarly there may or maynot be multiple stream protocols default being TCP
+
+there are four stages for a server and client communication:
+BLAB: Bind, Listen, Accept, Begin.
+1. BIND:
+a computer uses a lot of ports, for different applications
+binding is reserving a port for the connection. for binding we need two things
+1) socket descriptor -> which we did above
+2) socket name -> a struct which tells the port
+
+#include <arpa/inet.h>
+...
+struct sockaddr_in name; -> where should the socket live on network
+name.sin_family = PF_INET; 
+name.sin_port = (in_port_t)htons(30000); -> typecasting the result of htons 
+to in_port_t which is a typedef alias usually just uint16_t. 
+convert a number from host byte order -> network byte order
+basically OSes use different representation little endian, big endian (LSB or MSB first). this ensure that all the number is in Big Endian which is usedin networks
+htons -> Host TO Network Short
+htonl -> " Long or rather 32bit (uint32_t) in this case for the IP since ipv4 is 32 bit
+
+name.sin_addr.s_addr = htonl(INADDR_ANY);
+so basically telling the program we will use any ip address to listen on.
+
+here sin means socket internet and obviously sin_addr is a structure.
+
+int c = bind(listener_d, (struct sockaddr *) &name, sizeof(name))
+welp now we use all of that to bind the address and port to the socket.
+now heres the thing sockaddr_in struct is basically saying address structure for ipv4. then we typecasted it to sockaddr that is a more generic version i.e. it accepts any addresses. the idea is bind accepts all address types but since we need a proper definition of what ip and port we need to use the sockaddr_in and then we typecasted it back to sockaddr for bind. 
+
+since they are written the same the kernel is able to safely interpret the typecasted stuff.
+
+when a socket is bound to port, OS prevents rebinding for next 30s. including the program that was bound in first place. ensure that you have set resue option on the socket.
+int reuse = 1;
+setsockopt(listener_d, SOL_SOCKET, SO_REUSEADDR, (char *) &reuse, sizeof(int))
+
+using char * for reuse so that its treated as raw bytes in memory. not necessarily mean string
+
+
+2. LISTEN:
+listening for connection from clients. also tells how long show the client queue should be.
+if (listen(listener_d, 10) == -1)
+	error("Cant listen");
+here 10 clients can connect 11th will be told server busy.
+
+3. ACCEPT:
+once binding and listening queue is set up the server then waits for clients to contact the server.
+the accept systemcall returns a second socket descriptor.
+well you need the second socket because we need to uniquely identify clients using the 4 tuple (localip, port, remoteip, port)
+but the listening socket is a bit special that it has only the local addresses.
+
+struct sockaddr_storage client_addr;
+/*sockaddr_storage is a generic large container that holds any kinds of addresses */
+
+unsigned int address_size = sizeof(client_addr);
+int connect_d = accept(listener_d, (struct sockaddr *) &client_addr, &address_size);
+if (connect_d == -1)
+	error("cant open secondary socket");
+the kernel will write down the clients address int the client addr function
+hence we need to pass its address so that the kernel can modify it
+
+so now this connect_d is the new connection descriptor that will be used for talking
+
+-> sockets are special data streams since they go both ways. both input and output. unlike normally how we use fprintf() to output data. for sockets we 
+use the "send()" syscall
+send(connect_d, msg, strlen(msg), 0)
+so we give it the socket descriptor, the msg pointer we want to pass, and obviously the length of the message.
+obviously we also need to check return value is not -1 since errors are common
+
+#use ports > 1024 to be safe
+
+check /etc/services on unix style machines for ports used by common servers.
+
+
+you will notice that we use \r\n frequently during messages passed on in the connections the \r stands for CR carriage return.
+which basically means move to the start of the current line
+so this mimicks typewriters, historically.
+so internet protocols require lines to end in CRLF (carriage return + line feed) which is \r\n
+
+
+in order to receive/read data from client we use the "recv" the equivalent of scanf() i suppose?
+
+syntax: recv(<descriptor>, <buffer>, <bytes to read>, 0);
+
+a message will be stored like an array
+W H O\r\n -> so 5 chars here. notice that its not terminated with NULL \0
+recv() will return the number of chars, -1 for err and 0 if closed the connection.
+you are not guaranteed to receive all characters in a single call to recv()
+so might have to call recv() multiple times.
+best use case:
+
+we write a wrapper function which will call recv until \n is reached
+
+int read_in(int socket, char *buf, int len){
+	char *s = buf;
+	int slen = len;
+	int c = recv(socket, s, slen, 0);
+	while((c > 0) && (s[c - 1] != '\n')){
+/*keep going until nothing to read or you reach \n*/
+		s += c; slen -= c;
+/*s = s + c, slen = slen - c, basically s moves in the direction of what has been printed, keeps a index finger of sorts as to from where we need the rest, and slen is remaining length*/
+		c = recv(socket, s, slen, 0);
+/*receive from socket start from s, until slen, no external options*/
+	}
+	if (c<0) /*-1*/
+		return c;
+	else if (c == 0)
+		buf[0] = '\0';
+	else
+		s[c-1]='\0'; /*replacing \n with \0 because C strings expect a NUll char for the end*/
+	return len - slen; /*returns the used space*/
+}
+
+
