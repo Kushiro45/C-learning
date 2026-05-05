@@ -126,3 +126,11 @@ int read_in(int socket, char *buf, int len){
 }
 
 
+obviously this all will only work for one client but the other will have to wait for the first to finish.
+so once can either use fork/threading for multiple clients.
+
+using fork():
+the server uses listener sockets and the clients talk through the secondary socket so when you create a fork you can close the 
+
+
+
