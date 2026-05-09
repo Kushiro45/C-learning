@@ -29,7 +29,7 @@ name.sin_family = PF_INET;
 name.sin_port = (in_port_t)htons(30000); -> typecasting the result of htons 
 to in_port_t which is a typedef alias usually just uint16_t. 
 convert a number from host byte order -> network byte order
-basically OSes use different representation little endian, big endian (LSB or MSB first). this ensure that all the number is in Big Endian which is usedin networks
+basically OSes use different representation little endian, big endian (LSB or MSB first). this ensures that all the number is in Big Endian which is usedin networks
 htons -> Host TO Network Short
 htonl -> " Long or rather 32bit (uint32_t) in this case for the IP since ipv4 is 32 bit
 
@@ -130,7 +130,55 @@ obviously this all will only work for one client but the other will have to wait
 so once can either use fork/threading for multiple clients.
 
 using fork():
-the server uses listener sockets and the clients talk through the secondary socket so when you create a fork you can close the 
+the server uses listener sockets and the clients talk through the secondary socket so when you create a fork you can close the secondary socket on the server created by accept(), and then also close the listener from the fork process.
 
+
+Clients:
+unlike BLAB in server client can simply CB
+connect and begin.
+
+in order to connect the client needs to know Remote IP:port of the server its connecting to
+
+so creating a client socket goes as follows
+int s = socket(PF_INET, SOCK_STREAM, 0);
+
+struct sockaddr_in si;
+memset(&si, 0, sizeof(si));
+memory set, basically telling the computer to fill the memory starting from the address of si with the number 0, till the size of si. why do this? well the stack memory may have garbage values, so this sets every byte to '0'. Basically cleaning the slate before writing.
+si.sin_family = PF_INET;
+si.sin_addr.s_addr = inet_addr("208.201.239.100");
+
+obviously this implementation expects us to know the IP of the server we want to connect, but most of the times we will have Domain name instead.
+
+si.sin_port = htons(80);
+
+
+connect(s, (struct sockaddr *) &si, sizeof(si))
+connect will use the socket and the configs we made in the struct to connect.
+
+
+getaddrinfo() will translate domains into addresses: 
+in order to use DNS for resolving Domain names the program will have a different implementation.
+
+#include <netdb.h>
+
+struct addrinfo *res; ---> where results will be stored, notice we use a pointer for res because thisll be created a filled by getaddrinfo so we just pass that pointer to the function and the function will fill it. (heap)
+struct addrinfo hints; ----> tells getaddrinfo about the addresses (stack)
+memset(&hints, 0, sizeof(hints)); ---> zeroing out the hints, same as earlier
+hints.ai_family = PF_UNSPEC; ---> (ai stands for address info), Protocol family unspecified, i.e. IPV4 or IPv6 doesnt matter which.
+hints.ai_socktype = SOCK_STREAM; --> the type of the socket is stream socket.
+getaddrinfo("www.google.com", "80", &hints, &res); --> get address of google, write down porto connect in a string format., the config in hints, and save result in res
+
+note AF_INET and PF_INET are use interchangably in unix systems, historically PF_INET is more historically accurate but meh.
+
+then we create a socket using these structs.
+int s = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+
+finally connect,
+connect(s, res->ai_addr, res->ai_addrlen); 
+remember that the res is in the heap and needs to be freed.
+freeaddrinfo(res);
+
+Web clients:
 
 

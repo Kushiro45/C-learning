@@ -75,6 +75,8 @@ exactly the same program, on the same line number. same variables & values, only
 NOTE: when creating a fork, we generally store the pid via
 pid_t datatype; pid_t is used because different OSes use different var types like short or int so it detects whats used and uses that.
 
+so when you do fork and it returns 0, it means that now we are inside the child and the codeinside the conditional statement for the child will obviously only run in the child (check 11/IKKP_with_fork.c)
+
 forking is done in OSes using copy-on-write, same memory is used rather than making a copy, only the changed memory gets copied to the new PID
 NOTE: windows doesnt support the fork() systemcall, because implementing it efficiently is hard to do on it however Cygwin does allow fork, which is still slower than fork() on other platforms
 better use CreateProcess() (enchanced version of system())
