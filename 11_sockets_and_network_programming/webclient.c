@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <netdb.h>
 
+/*this is only a http client, so while it works, the https sites require a more complex implementation due to SSL. basically need to add encryption but thats another ball game altogether */
 
 void error(char *msg){
 	fprintf(stderr, "%s: %s\n", msg, strerror(errno));
